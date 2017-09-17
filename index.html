@@ -5,8 +5,15 @@
 
 <script>
 var app = angular.module("payToPlay", []);
-app.controller("myCtrl", function($scope) {
+app.controller("myCtrl", function($scope, $http) {
+  // https://developers.google.com/apis-explorer/#p/civicinfo/v2/ API url formatter
+  // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
+  $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
+    .then(function(response) {
+      console.log(response.data);
+    }
 
+  );
 });
 </script>
 <p>Pay To Play</p>
