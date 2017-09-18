@@ -12,12 +12,9 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
   $scope.repSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.selectedDivision.name, selectRole:$scope.selectRole});
-    console.log("repsearch");
-    console.log($scope.selectRole);
     $http.get(url)
       .then(function(response) {
-        console.log('yes')
-        console.log(response.data);
+        $scope.representatives = response.data.officials;
       });
   };
 
@@ -51,6 +48,20 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 </select>
 
 <button ng-click="repSearch()">Search</button>
+
+{{office}}
+
+{{representatives}}
+<ul>
+  <li ng-repeat="x in representatives">
+    <div ng-if="x.name">{{x.name}}</div>
+    <div ng-if="x.party">{{x.party}}</div>
+    <div ng-if="x.photoUrl">{{x.photoUrl}}</div>
+    <img ng-src="{{x.photoUrl}}"/>
+    <div ng-if="x.phones[0]">{{x.phones[0]}}</div>
+    <div ng-if="x.address[0]">{{x.address[0].line1}}</div>
+  </li>
+</ul>
 
 <!-- <input ng-model="repInput">
 <select ng-model="selectedRep" ng-options="x.name for x in representatives">
