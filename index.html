@@ -8,7 +8,14 @@ var app = angular.module("payToPlay", []);
 app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   // https://developers.google.com/apis-explorer/#p/civicinfo/v2/ API url formatter
   // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
+  // 837f8f22eb0db5c5cebf40b2dfcc3392
   // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
+
+  $scope.divisionsInput = 'Enter Location';
+  $scope.divisions = [{name: 'Enter Location'}];
+  $scope.clearInput = function() {
+    if ($scope.divisionsInput === 'Enter Location') {$scope.divisionsInput = ''};
+  }
 
   $scope.repSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.selectedDivision.name, selectRole:$scope.selectRole});
@@ -29,8 +36,22 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   };
 
   $scope.searchPayments = function(name) {
-    console.log(name);
-  }
+    let url = $interpolate('https://www.opensecrets.org/api/?method=getLegislators&id=NJ&apikey=837f8f22eb0db5c5cebf40b2dfcc3392')();
+    console.log(url);
+    $http.get(url
+      // {
+      //   transformResponse: function(cnv) {
+      //     console.log('lol');
+      //     var x2js = new X2JS();
+      //     var aftCnv = x2js.xml_str2json(cnv);
+      //     return aftCvn;
+      //   }
+      // })
+    )
+        .then(function(response) {
+          console.log(response);
+        });
+  };
 
   $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
 
@@ -40,7 +61,7 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
-<input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}">
+<input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
 <select ng-model="selectedDivision" ng-options="x.name for x in divisions">
 </select>
 
