@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="css.css">
 <body>
 
 <script>
@@ -9,13 +10,13 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   // https://developers.google.com/apis-explorer/#p/civicinfo/v2/ API url formatter
   // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
   // 837f8f22eb0db5c5cebf40b2dfcc3392
-  // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
 
   $scope.divisionsInput = 'Enter Location';
   $scope.divisions = {value: 'Enter Location', results: [{name: 'Enter Location'}]}
   $scope.divisions.value = $scope.divisions.results[0];
-  $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
+  $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPurposeOfficer']
   $scope.selectRole = 'headOfState';
+  $scope.errors = '';
 
   $scope.clearInput = function() {
     if ($scope.divisionsInput === 'Enter Location') {$scope.divisionsInput = ''};
@@ -25,7 +26,12 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.divisions.value.name, selectRole:$scope.selectRole});
     $http.get(url)
       .then(function(response) {
-        $scope.representatives = response.data.officials;
+        if(response.data.officials) {
+          $scope.errors = "";
+          $scope.representatives = response.data.officials;
+        } else {
+          $scope.errors = "No officials matching search results";
+        }
       });
   };
 
@@ -35,14 +41,17 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
     $http.get(url)
     .then(function(response) {
       if (response.data.results) {
+        $scope.errors = ""
         $scope.divisions = {value: response.data.results[0], results: response.data.results};
+      } else {
+        $scope.errors = "Location did not match any results"
       }
     });
   };
 
   $scope.searchPayments = function(name) {
     let url = $interpolate('https://www.opensecrets.org/api/?method=getLegislators&id=NJ&apikey=837f8f22eb0db5c5cebf40b2dfcc3392')();
-    console.log(url);
+
     $http.get(url
       // {
       //   transformResponse: function(cnv) {
@@ -61,33 +70,34 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
 });
 </script>
-<p>Pay To Play</p>
+<p>Elected Officials</p>
 
 <div ng-app="payToPlay" ng-controller="myCtrl">
-<!-- {{divisions}} -->
-<input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
-<select ng-model="divisions.value" ng-options="x.name for x in divisions.results">
-<!-- <select ng-model="divisions[0].name" ng-options="x.name for x in divisions"> -->
-</select>
+  <div class="searchbar">
+    <input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
+    <select ng-model="divisions.value" ng-options="x.name for x in divisions.results">
+    </select>
 
-<select ng-model="selectRole" ng-options="x for x in repRoles">
-</select>
+    <select ng-model="selectRole" ng-options="x for x in repRoles">
+    </select>
 
-<button ng-click="repSearch()">Search</button>
+    <button ng-click="repSearch()">Search</button>
+  </div>
 
-<div>{{office}}</div>
-{{representatives}}
-<ul>
-  <li ng-repeat="x in representatives" ng-click="searchPayments(x.name)">
-    <div ng-if="x.name">{{x.name}}</div>
-    <div ng-if="x.party">{{x.party}}</div>
-    <img ng-src="{{x.photoUrl}}"/>
-    <div ng-if="x.urls[0]">{{x.urls[0]}}</div>
-    <div ng-if="x.phones[0]">{{x.phones[0]}}</div>
-    <div ng-if="x.address[0]">{{x.address[0].line1}}</div>
-    <div ng-if="x.emails[0]">{{x.emails[0]}}</div>
-  </li>
-</ul>
+  {{errors}}
+
+  <ul>
+    <li ng-repeat="x in representatives">
+    <!-- <li ng-repeat="x in representatives" ng-click="searchPayments(x.name)"> -->
+      <div ng-if="x.name">{{x.name}}</div>
+      <div ng-if="x.party">{{x.party}}</div>
+      <img ng-src="{{x.photoUrl}}"/>
+      <div ng-if="x.urls[0]">{{x.urls[0]}}</div>
+      <div ng-if="x.phones[0]">{{x.phones[0]}}</div>
+      <div ng-if="x.address[0]">{{x.address[0].line1}}</div>
+      <div ng-if="x.emails[0]">{{x.emails[0]}}</div>
+    </li>
+  </ul>
 
 </div>
 

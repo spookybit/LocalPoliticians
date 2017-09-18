@@ -1,0 +1,8 @@
+.searchbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.searchbar select:first-of-type {
+  min-width: 55%;
+}
