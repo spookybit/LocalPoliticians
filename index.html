@@ -10,7 +10,15 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
   // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
   // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
 
-  $scope.selectedDivision = "test";
+  $scope.repSearch = function() {
+    let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.selectedDivision.name, selectRole:$scope.selectRole});
+    console.log($scope.selectRole);
+    $http.get(url)
+      .then(function(response) {
+        console.log('yes')
+        console.log(response.data);
+      });
+  };
 
   $scope.divisionsSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query="{{divisionsInput}}"')({divisionsInput:$scope.divisionsInput});
@@ -18,10 +26,16 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
       .then(function(response) {
         $scope.divisions = response.data.results;
         if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
-        console.log(response.data.results);
+        // console.log(response.data.results);
       }
     );
+  };
+
+  $scope.searchDivision = function() {
+    console.log('hehe');
   }
+
+  $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
 
 });
 </script>
@@ -30,13 +44,16 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
 <input ng-model="divisionsInput" ng-change="divisionsSearch()">
-<select ng-model="selectedDivision" ng-options="x.name for x in divisions" value="">
+<select ng-model="selectedDivision" ng-options="x.name for x in divisions" ng-click="repSearch()">
 </select>
-<!-- <ul>
-  <li ng-repeat="x in divisions">
-    {{x.name}}
-  </li>
-</ul> -->
+
+<select ng-model="selectRole" ng-options="x for x in repRoles">
+</select>
+
+<input ng-model="repInput">
+<select ng-model="selectedRep" ng-options="x.name for x in representatives">
+</select>
+
 </div>
 
 
