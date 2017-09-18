@@ -8,24 +8,17 @@ var app = angular.module("payToPlay", []);
 app.controller("myCtrl", function($scope, $http, $interpolate) {
   // https://developers.google.com/apis-explorer/#p/civicinfo/v2/ API url formatter
   // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
+  // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
 
-  // search for divisions
-  $http.get("https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query=mateo")
-    .then(function(response) {
-      console.log(response.data);
-      $scope.divisions = response.data.results
-    }
-  );
+  $scope.selectedDivision = "test";
 
-  $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
   $scope.divisionsSearch = function() {
-    // let url = $interpolate("https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query='{{divisions}}'")
-
-    let url = $interpolate('https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query={{divisionsInput}}')({divisionsInput:$scope.divisionsInput});
+    let url = $interpolate('https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query="{{divisionsInput}}"')({divisionsInput:$scope.divisionsInput});
+    console.log(url);
     $http.get(url)
       .then(function(response) {
-        // console.log(response.data);
-        $scope.divisions = response.data.results
+        $scope.divisions = response.data.results;
+        console.log(response.data.results);
       }
     );
   }
@@ -37,11 +30,13 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
 <input ng-model="divisionsInput" ng-change="divisionsSearch()">
-<ul>
+<select ng-model="divisions[0]" ng-options="x.name for x in divisions" value="">
+</select>
+<!-- <ul>
   <li ng-repeat="x in divisions">
     {{x.name}}
   </li>
-</ul>
+</ul> -->
 </div>
 
 
