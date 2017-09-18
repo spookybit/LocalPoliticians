@@ -12,13 +12,15 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
 
   $scope.divisionsInput = 'Enter Location';
-  $scope.divisions = [{name: 'Enter Location'}];
+  $scope.divisions = {value: 'Enter Location', results: [{name: 'Enter Location'}]}
+  // $scope.selectedDivision = 'Enter Location';
+  $scope.what = 'what?';
   $scope.clearInput = function() {
     if ($scope.divisionsInput === 'Enter Location') {$scope.divisionsInput = ''};
   }
 
   $scope.repSearch = function() {
-    let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.selectedDivision.name, selectRole:$scope.selectRole});
+    let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.divisions.value.name, selectRole:$scope.selectRole});
     $http.get(url)
       .then(function(response) {
         $scope.representatives = response.data.officials;
@@ -30,8 +32,9 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
     $http.get(url)
     .then(function(response) {
-      $scope.divisions = response.data.results;
-      if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
+      $scope.divisions = {value: response.data.results[0], results: response.data.results};
+      // if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
+      console.log($scope.divisions);
     });
   };
 
@@ -62,7 +65,8 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
 <input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
-<select ng-model="selectedDivision" ng-options="x.name for x in divisions">
+<select ng-model="divisions.value" ng-options="x.name for x in divisions.results">
+<!-- <select ng-model="divisions[0].name" ng-options="x.name for x in divisions"> -->
 </select>
 
 <select ng-model="selectRole" ng-options="x for x in repRoles">
@@ -83,10 +87,6 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
     <div ng-if="x.emails[0]">{{x.emails[0]}}</div>
   </li>
 </ul>
-
-<!-- <input ng-model="repInput">
-<select ng-model="selectedRep" ng-options="x.name for x in representatives">
-</select> -->
 
 </div>
 
