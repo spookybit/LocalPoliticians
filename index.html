@@ -28,8 +28,8 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
     });
   };
 
-  $scope.searchDivision = function() {
-    console.log('hehe');
+  $scope.searchPayments = function(name) {
+    console.log(name);
   }
 
   $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
@@ -49,17 +49,17 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
 <button ng-click="repSearch()">Search</button>
 
-{{office}}
-
+<div>{{office}}</div>
 {{representatives}}
 <ul>
-  <li ng-repeat="x in representatives">
+  <li ng-repeat="x in representatives" ng-click="searchPayments(x.name)">
     <div ng-if="x.name">{{x.name}}</div>
     <div ng-if="x.party">{{x.party}}</div>
-    <div ng-if="x.photoUrl">{{x.photoUrl}}</div>
     <img ng-src="{{x.photoUrl}}"/>
+    <div ng-if="x.urls[0]">{{x.urls[0]}}</div>
     <div ng-if="x.phones[0]">{{x.phones[0]}}</div>
     <div ng-if="x.address[0]">{{x.address[0].line1}}</div>
+    <div ng-if="x.emails[0]">{{x.emails[0]}}</div>
   </li>
 </ul>
 
