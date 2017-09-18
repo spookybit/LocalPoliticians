@@ -13,8 +13,10 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
   $scope.divisionsInput = 'Enter Location';
   $scope.divisions = {value: 'Enter Location', results: [{name: 'Enter Location'}]}
-  // $scope.selectedDivision = 'Enter Location';
-  $scope.what = 'what?';
+  $scope.divisions.value = $scope.divisions.results[0];
+  $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
+  $scope.selectRole = 'headOfState';
+
   $scope.clearInput = function() {
     if ($scope.divisionsInput === 'Enter Location') {$scope.divisionsInput = ''};
   }
@@ -32,9 +34,9 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 
     $http.get(url)
     .then(function(response) {
-      $scope.divisions = {value: response.data.results[0], results: response.data.results};
-      // if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
-      console.log($scope.divisions);
+      if (response.data.results) {
+        $scope.divisions = {value: response.data.results[0], results: response.data.results};
+      }
     });
   };
 
@@ -56,7 +58,6 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
         });
   };
 
-  $scope.repRoles = ['headOfState', 'headOfGovernment', 'deputyHeadOfGovernment', 'governmentOfficer', 'executiveCouncil', 'legislatorUpperBody', 'legislatorLowerBody', 'highestCourtJudge', 'judge', 'schoolBoard', 'specialPropseOfficer']
 
 });
 </script>
