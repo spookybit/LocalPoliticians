@@ -14,10 +14,10 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 
   $scope.divisionsSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query="{{divisionsInput}}"')({divisionsInput:$scope.divisionsInput});
-    console.log(url);
     $http.get(url)
       .then(function(response) {
         $scope.divisions = response.data.results;
+        if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
         console.log(response.data.results);
       }
     );
@@ -30,7 +30,7 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
 <input ng-model="divisionsInput" ng-change="divisionsSearch()">
-<select ng-model="divisions[0]" ng-options="x.name for x in divisions" value="">
+<select ng-model="selectedDivision" ng-options="x.name for x in divisions" value="">
 </select>
 <!-- <ul>
   <li ng-repeat="x in divisions">
