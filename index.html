@@ -5,13 +5,14 @@
 
 <script>
 var app = angular.module("payToPlay", []);
-app.controller("myCtrl", function($scope, $http, $interpolate) {
+app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   // https://developers.google.com/apis-explorer/#p/civicinfo/v2/ API url formatter
   // key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA
   // $http.get("https://www.googleapis.com/civicinfo/v2/representatives/ocd-division%2Fcountry%3Aus%2Fstate%3Anc?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA")
 
   $scope.repSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/representatives?roles={{selectRole}}&address="{{selectedDivision}}"&key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA')({selectedDivision:$scope.selectedDivision.name, selectRole:$scope.selectRole});
+    console.log("repsearch");
     console.log($scope.selectRole);
     $http.get(url)
       .then(function(response) {
@@ -22,13 +23,12 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 
   $scope.divisionsSearch = function() {
     let url = $interpolate('https://www.googleapis.com/civicinfo/v2/divisions?key=AIzaSyB-zPHJ1O3BSWPVHMHI154vs9-Oye16tnA&query="{{divisionsInput}}"')({divisionsInput:$scope.divisionsInput});
+
     $http.get(url)
-      .then(function(response) {
-        $scope.divisions = response.data.results;
-        if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
-        // console.log(response.data.results);
-      }
-    );
+    .then(function(response) {
+      $scope.divisions = response.data.results;
+      if ($scope.divisions) { $scope.selectedDivision = $scope.divisions[0]; }
+    });
   };
 
   $scope.searchDivision = function() {
@@ -43,16 +43,18 @@ app.controller("myCtrl", function($scope, $http, $interpolate) {
 
 <div ng-app="payToPlay" ng-controller="myCtrl">
 <!-- {{divisions}} -->
-<input ng-model="divisionsInput" ng-change="divisionsSearch()">
-<select ng-model="selectedDivision" ng-options="x.name for x in divisions" ng-click="repSearch()">
+<input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}">
+<select ng-model="selectedDivision" ng-options="x.name for x in divisions">
 </select>
 
 <select ng-model="selectRole" ng-options="x for x in repRoles">
 </select>
 
-<input ng-model="repInput">
+<button ng-click="repSearch()">Search</button>
+
+<!-- <input ng-model="repInput">
 <select ng-model="selectedRep" ng-options="x.name for x in representatives">
-</select>
+</select> -->
 
 </div>
 
