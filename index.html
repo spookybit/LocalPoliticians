@@ -91,7 +91,9 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
     <!-- <li ng-repeat="x in representatives" ng-click="searchPayments(x.name)"> -->
       <div ng-if="x.name">{{x.name}}</div>
       <div ng-if="x.party">{{x.party}}</div>
-      <img ng-src="{{x.photoUrl}}"/>
+      <div ng-if="x.photoUrl" class="frame">
+        <img ng-src="{{x.photoUrl}}"/>
+      </div>
       <div ng-if="x.urls[0]">{{x.urls[0]}}</div>
       <div ng-if="x.phones[0]">{{x.phones[0]}}</div>
       <div ng-if="x.address[0]">{{x.address[0].line1}}</div>
