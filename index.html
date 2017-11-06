@@ -79,15 +79,15 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
 </div>
 
 <div ng-app="payToPlay" ng-controller="myCtrl">
-  <div class="searchbar">
-    <input ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
-    <select ng-model="divisions.value" ng-options="x.name for x in divisions.results">
+  <div class="searchbar col-12">
+    <input class="col-4" ng-model="divisionsInput" ng-change="divisionsSearch()" ng-model-options="{debounce: 1000}" ng-click="clearInput()">
+    <select class="col-5" ng-model="divisions.value" ng-options="x.name for x in divisions.results">
     </select>
 
-    <select ng-model="selectRole" ng-options="x for x in repRoles">
+    <select class="col-2" ng-model="selectRole" ng-options="x for x in repRoles">
     </select>
 
-    <button ng-click="repSearch()">Search</button>
+    <button class="col-1" ng-click="repSearch()">Search</button>
   </div>
 
   {{errors}}
