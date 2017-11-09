@@ -57,10 +57,6 @@ select {
   background-color: white;
 }
 
-/*.searchbar select:first-of-type {
-  min-width: 55%;
-}*/
-
 ul {
   list-style-type: none;
   display: flex;
