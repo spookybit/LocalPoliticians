@@ -7,7 +7,12 @@ body {
   margin: auto;
 }
 
-@media only screen and (min-width: 768px) {
+[class*="col-"] {
+  width: 100%;
+  float: left;
+}
+
+@media only screen and (min-width: 600px) {
     /* For desktop: */
     .col-1 {width: 8.33%;}
     .col-2 {width: 16.66%;}
@@ -61,6 +66,7 @@ ul {
   list-style-type: none;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 li {
@@ -68,8 +74,9 @@ li {
   flex-direction: column;
   align-items: center;
   margin: 30px 20px 30px 20px;
-  max-width: 14em;
-  max-height: 400px;
+  max-width: 100%;
+  /*max-width: 14em*/
+  max-height: 100%;
 }
 
 li:hover {
@@ -78,7 +85,7 @@ li:hover {
 
 .frame {
   max-width: 100%;
-  max-height: 13em;
+  /*max-height: 13em;*/
   overflow: hidden;
 }
 

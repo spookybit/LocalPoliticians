@@ -93,7 +93,7 @@ app.controller("myCtrl", function($scope, $http, $interpolate, $timeout) {
   {{errors}}
 
   <ul>
-    <li ng-repeat="x in representatives">
+    <li ng-repeat="x in representatives" class="col-4">
     <!-- <li ng-repeat="x in representatives" ng-click="searchPayments(x.name)"> -->
       <div ng-if="x.name">{{x.name}}</div>
       <div ng-if="x.party">{{x.party}}</div>
